@@ -1,6 +1,8 @@
-input = imread('input_1.jpg');
+input = imread('input1.jpg');
 input_bw = im2bw(input, 0.9);
-input_label = bwlabel(input_bw);
+
+%Connected Component Labeling:
+input_label = bwlabel(input_bw); %TODO: implementieren
 
 %get pixels of component
 %{
