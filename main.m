@@ -24,6 +24,9 @@ count = max(input_label(:));
 
 %generate full graph
 graph = ones(count);
+for n = 1:count
+   graph(n,n) = 0;
+end
 
 %save coordinates for each node
 coors = zeros(2,count);
@@ -50,3 +53,77 @@ for a = 1:count
        end
    end
 end
+
+%calculate all the possible combinations for this constellation
+starCount = 7;    %How many stars are in the constellation?
+stars = [1,2,3,4,5,6,7,8,9,10,11];    %Which stars are left in the graph
+
+%function
+combinationCount = factorial(count) / (factorial(starCount) * factorial(count - starCount));
+combinations = nchoosek(stars,starCount);
+
+for i = 1: combinationCount
+    test = input_label;
+    for j = 1: starCount
+        for k = 1: starCount
+            if graph(j,k) == 1
+                x1 = coors(2, combinations(i,j));
+                x2 = coors(2, combinations(i,k));
+                y1 = coors(1, combinations(i,j));
+                y2 = coors(1, combinations(i,k));
+                if x1 ~= x2 && y1 ~= y2
+                    m = (y2 - y1)/(x2 - x1);
+                    for x = x1 : x2
+                        y = round(m * (x - x1) + y1);
+                        test(y,x) = 1;
+                        test(y + 1,x) = 1;
+                        test(y - 1,x) = 1;
+                        test(y,x + 1) = 1;
+                        test(y,x - 1) = 1;
+                    end
+                end
+                if x1 == x2
+                    for y = y1 : y2
+                        test(y,x1) = 1;
+                        test(y + 1,x1) = 1;
+                        test(y - 1,x1) = 1;
+                        test(y,x1 + 1) = 1;
+                        test(y,x1 - 1) = 1;
+                    end
+                end
+                if y1 == y2
+                    for x = x1 : x2
+                        test(y1,x) = 1;
+                        test(y1,x - 1) = 1;
+                        test(y1,x - 1) = 1;
+                        test(y1 + 1,x) = 1;
+                        test(y1 - 1,x) = 1;
+                    end
+                end
+            end
+        end
+    end
+end
+
+%zeigt das letzte bild, das erstellt wurde
+imshow(test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
