@@ -55,7 +55,7 @@ for a = 1:count
 end
 
 %calculate all the possible combinations for this constellation
-starCount = 7;    %How many stars are in the constellation?
+starCount = 11;    %How many stars are in the constellation?
 stars = [1,2,3,4,5,6,7,8,9,10,11];    %Which stars are left in the graph
 
 %function
@@ -106,7 +106,41 @@ for i = 1: combinationCount
 end
 
 %zeigt das letzte bild, das erstellt wurde
-imshow(test)
+figure(1);
+imshow(test);
+
+
+%hough transformation
+[H,T,R] = hough(test);
+figure(2);
+imshow(H,[],'XData', T, 'YData', R, 'InitialMagnification', 'fit');
+xlabel('\theta'), ylabel('\rho');
+axis on, axis normal, hold on;
+P = houghpeaks(H, 5, 'threshold', ceil(0.3*max(H(:))));
+x = T(P(:,2));
+y = R(P(:,1));
+plot(x,y,'s','color','white');
+
+lines = houghlines(test, T, R, P, 'FillGap', 5, 'MinLength', 7);
+figure(3);
+imshow(input), hold on;
+max_length = 0;
+for k = 1 : length(lines)
+    xy = [lines(k).point1; lines(k).point2];
+    plot(xy(:,1),xy(:,2),'LineWidth', 2, 'Color', 'green');
+    
+    plot(xy(1,1),xy(1,2),'x', 'LineWidth', 2, 'Color', 'yellow');
+    plot(xy(2,1),xy(2,2),'x', 'LineWidth', 2, 'Color', 'red');
+    
+    len = norm(lines(k).point1 - lines(k).point2);
+    if (len > max_length)
+        max_length = len;
+        xy_long = xy;
+    end
+end
+
+
+
 
 
 
