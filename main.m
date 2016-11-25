@@ -1,3 +1,4 @@
+clear all
 input = imread('input1.jpg');
 input_bw = im2bw(input, 0.9);
 
@@ -111,58 +112,111 @@ for a = 1:count
 end
 angles(isnan(angles)) = 0;        
                     
-%calculate all the possible combinations for this constellation
-starCount = 11;    %How many stars are in the constellation?
-stars = [1,2,3,4,5,6,7,8,9,10,11];    %Which stars are left in the graph
+%set the parameters for our input and the B.I.G dipper
+global edgesCount
+edgesCount = 7;     %How many edges are in the constellation?
+global maxEdges  %Which stars are left in the graph
+maxEdges = 3;
 
-%function
-combinationCount = factorial(count) / (factorial(starCount) * factorial(count - starCount));
-combinations = nchoosek(stars,starCount);
 
-for i = 1: combinationCount
-    test = input_label;
-    for j = 1: starCount
-        for k = 1: starCount
-            if graph(j,k) == 1
-                x1 = coors(2, combinations(i,j));
-                x2 = coors(2, combinations(i,k));
-                y1 = coors(1, combinations(i,j));
-                y2 = coors(1, combinations(i,k));
-                if x1 ~= x2 && y1 ~= y2
-                    m = (y2 - y1)/(x2 - x1);
-                    for x = x1 : x2
-                        y = round(m * (x - x1) + y1);
-                        test(y,x) = 1;
-                        test(y + 1,x) = 1;
-                        test(y - 1,x) = 1;
-                        test(y,x + 1) = 1;
-                        test(y,x - 1) = 1;
-                    end
+%generate list with all edges && save the intercecting ones
+global edges;
+    j = 1;
+    for n = 1 : count
+       for m = n : count
+           if graph(n,m) == 1
+              edges(1,j) = n;
+              edges(2,j) = m;
+              j = j + 1;
+           end
+       end
+    end
+    for n = 1 : size(edges, 2)
+          count = 4;
+          x1 = coors(1, edges(1,n));
+          y1 = coors(2, edges(1,n));
+          x2 = coors(1, edges(2,n));
+          y2 = coors(2, edges(2,n));
+          for m = 1 : size(edges, 2)
+            if m ~= n
+                x3 = coors(1, edges(1,m));
+                y3 = coors(2, edges(1,m));
+                x4 = coors(1, edges(2,m));
+                y4 = coors(2, edges(2,m));
+                minX = min([x1, x2, x3, x4]);
+                maxX = max([x1, x2, x3, x4]);
+                minY = min([y1, y2, y3, y4]);
+                maxY = max([y1, y2, y3, y4]);
+                pX = ((x1*y2 - y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+                pY = ((x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+                if minX < pX && pX < maxX && minY < pY && pY < maxY
+                    edges(count, n) = m;
+                    count = count + 1;
                 end
-                if x1 == x2
-                    for y = y1 : y2
-                        test(y,x1) = 1;
-                        test(y + 1,x1) = 1;
-                        test(y - 1,x1) = 1;
-                        test(y,x1 + 1) = 1;
-                        test(y,x1 - 1) = 1;
-                    end
-                end
-                if y1 == y2
-                    for x = x1 : x2
-                        test(y1,x) = 1;
-                        test(y1,x - 1) = 1;
-                        test(y1,x - 1) = 1;
-                        test(y1 + 1,x) = 1;
-                        test(y1 - 1,x) = 1;
-                    end
-                end
-            end
+             end
+          end
+    end
+    
+
+%do dat mofuking BnB and save all possible solutions
+global allEdges
+allEdges = size(edges,2);
+global solution
+solution = 1;
+global solutions
+solutions = 0;
+for n = 1 : (size(edges, 2));
+    edgesX = zeros(2, (size(edges, 2)));
+    edgesX(1, n) = 1;
+    edgesX(2, n) = 1;
+    for i = 4 : size(edges,1)
+        if edges(i,n) ~= 0
+            edgesX(2, edges(i,n)) = 1;
         end
     end
+    BnB(edgesX);
 end
 
-%zeigt das letzte bild, das erstellt wurde
+%einzeichnen
+for a = 1: size(solutions, 1)
+    test = input_label;
+    for b = 1 : size(solutions, 2)
+        if solutions(a, b) == 1
+                x1 = coors(2, edges(1, b));
+                x2 = coors(2, edges(2, b));
+                y1 = coors(1, edges(1, b));
+                y2 = coors(1, edges(2, b));
+                if x1 > x2
+                    tmp = x1;
+                    x1 = x2;
+                    x2 = tmp;
+                    tmp = y1;
+                    y1 = y2;
+                    y2 = tmp;
+                end
+                if x1 ~= x2
+                    m = (y2 - y1)/(x2 - x1);
+                else
+                    m = 1;
+                end
+                for x = x1 : x2
+                    y = round(m * (x - x1) + y1);
+                    test(y,x) = 1;
+                    test(y + 1,x) = 1;
+                    test(y - 1,x) = 1;
+                    test(y,x + 1) = 1;
+                    test(y,x - 1) = 1;
+                end
+        end
+    end
+    
+    %hier müsste die generalisierte hough trafo implementiert werden um zu
+    %checken ob es sich bereits um das richtige bild handelt
+    
+end
+
+
+%zeigt das letzte bild, das erstellt wurde (zu testzwecken)
 figure(1);
 imshow(test);
 
@@ -195,11 +249,6 @@ for k = 1 : length(lines)
         xy_long = xy;
     end
 end
-
-
-
-
-
 
 
 
