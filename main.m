@@ -1,7 +1,11 @@
 clear all
 input = imread('input1.jpg');
 input_bw = im2bw(input, 0.9);
+input_template = imread('template_sauber.jpg');
+input_template = im2bw(input_template, 0.8);
+imshow(input_template);
 
+MAIN_find_object_in_image(input_template, input_template);
 %Connected Component Labeling:
 input_label = bwlabel(input_bw); %TODO: implementieren
 
@@ -212,6 +216,11 @@ for a = 1: size(solutions, 1)
     
     %hier müsste die generalisierte hough trafo implementiert werden um zu
     %checken ob es sich bereits um das richtige bild handelt
+    MAIN_find_object_in_image(test, input_template);
+    % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
+    % an der GHT
+    % break; 
+    
     
 end
 
@@ -219,51 +228,3 @@ end
 %zeigt das letzte bild, das erstellt wurde (zu testzwecken)
 figure(1);
 imshow(test);
-
-
-%hough transformation
-[H,T,R] = hough(test);
-figure(2);
-imshow(H,[],'XData', T, 'YData', R, 'InitialMagnification', 'fit');
-xlabel('\theta'), ylabel('\rho');
-axis on, axis normal, hold on;
-P = houghpeaks(H, 5, 'threshold', ceil(0.3*max(H(:))));
-x = T(P(:,2));
-y = R(P(:,1));
-plot(x,y,'s','color','white');
-
-lines = houghlines(test, T, R, P, 'FillGap', 5, 'MinLength', 7);
-figure(3);
-imshow(input), hold on;
-max_length = 0;
-for k = 1 : length(lines)
-    xy = [lines(k).point1; lines(k).point2];
-    plot(xy(:,1),xy(:,2),'LineWidth', 2, 'Color', 'green');
-    
-    plot(xy(1,1),xy(1,2),'x', 'LineWidth', 2, 'Color', 'yellow');
-    plot(xy(2,1),xy(2,2),'x', 'LineWidth', 2, 'Color', 'red');
-    
-    len = norm(lines(k).point1 - lines(k).point2);
-    if (len > max_length)
-        max_length = len;
-        xy_long = xy;
-    end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
