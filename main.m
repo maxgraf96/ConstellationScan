@@ -1,11 +1,9 @@
+%good score appears to be higher then 6
 clear all
-input = imread('input1.jpg');
+input = imread('input2.jpg');
 input_bw = im2bw(input, 0.9);
-input_template = imread('template_sauber.jpg');
-input_template = im2bw(input_template, 0.8);
-imshow(input_template);
+input_template = rgb2gray(imread('template.jpg'));
 
-MAIN_find_object_in_image(input_template, input_template);
 %Connected Component Labeling:
 input_label = bwlabel(input_bw); %TODO: implementieren
 
@@ -83,6 +81,7 @@ angles_bigDipper = [0.1, 3.6;
 anglesCount_bigDipper = 39;
 
 %calculate angle between all nodes
+global angles;
 angles = zeros(count);
 for a = 1:count
    mainnode = [coors(1,a), coors(2,a)];
@@ -216,7 +215,7 @@ for a = 1: size(solutions, 1)
     
     %hier müsste die generalisierte hough trafo implementiert werden um zu
     %checken ob es sich bereits um das richtige bild handelt
-    MAIN_find_object_in_image(test, input_template);
+    %MAIN_find_object_in_image(test, input_template);
     % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
     % an der GHT
     % break; 
