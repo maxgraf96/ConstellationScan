@@ -11,7 +11,7 @@ function BnB(edgesX)
   else if size(edgesX, 2) - sum(edgesX(2, :)) + sum(edgesX(1, :)) >= edgesCount
           for i = 1 : size(edgesX, 2)
               if edgesX(2, i) == 0
-                    edgesX(2, i) = 1;
+                  edgesX(2, i) = 1;
                     if hasConnectionNew(edgesX, i)
                       edgesZ = edgesX;
                       edgesZ(1, i) = 1;

@@ -83,14 +83,14 @@ anglesCount_bigDipper = 39;
 %}
 
 %save all angles in big Dipper (Groﬂer Wagen)
-angles_bigDipper = [70, 76;
-                    76, 82;
-                    97, 103;
-                    102, 108;
-                    125, 131;
-                    137, 143;
-                    148, 154;
-                    171, 177;];
+angles_bigDipper = [68, 78;
+                    74, 84;
+                    95, 105;
+                    100, 110;
+                    123, 133;
+                    135, 145;
+                    146, 156;
+                    169, 179;];
 anglesCount_bigDipper = 8;
 
 %calculate angle between all nodes
@@ -144,7 +144,7 @@ global edges;
        end
     end
     for n = 1 : size(edges, 2)
-          count = 4;
+          j = 4;
           x1 = coors(1, edges(1,n));
           y1 = coors(2, edges(1,n));
           x2 = coors(1, edges(2,n));
@@ -166,8 +166,8 @@ global edges;
                 pX = ((x1*y2 - y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                 pY = ((x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                 if min1X < pX && pX < max1X && min1Y < pY && pY < max1Y && min2X < pX && pX < max2X && min2Y < pY && pY < max2Y
-                    edges(count, n) = m;
-                    count = count + 1;
+                    edges(j, n) = m;
+                    j = j + 1;
                 end
              end
           end
