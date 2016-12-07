@@ -1,6 +1,6 @@
 %good score appears to be higher then 6
 clear all
-input = imread('input2.jpg');
+input = imread('input1.jpg');
 input_bw = im2bw(input, 0.9);
 input_template = rgb2gray(imread('template.jpg'));
 
@@ -38,7 +38,8 @@ for n = 1:count
    coors(:,n) = [row(1); col(1)];
 end
 
-%save all angles in big Dipper (Groﬂer Wagen)
+%{
+save all angles in big Dipper (Groﬂer Wagen)
 angles_bigDipper = [0.1, 3.6;
                     4.8, 7.3;
                     7.9, 10.0;
@@ -79,10 +80,23 @@ angles_bigDipper = [0.1, 3.6;
                     176.0, 177.0;
                     178.6, 180.0];
 anglesCount_bigDipper = 39;
+%}
+
+%save all angles in big Dipper (Groﬂer Wagen)
+angles_bigDipper = [70, 76;
+                    76, 82;
+                    97, 103;
+                    102, 108;
+                    125, 131;
+                    137, 143;
+                    148, 154;
+                    171, 177;];
+anglesCount_bigDipper = 8;
 
 %calculate angle between all nodes
 global angles;
 angles = zeros(count);
+allAngles = zeros(count);
 for a = 1:count
    mainnode = [coors(1,a), coors(2,a)];
    for b = 1:count
@@ -103,8 +117,9 @@ for a = 1:count
                            break
                        end
                    end
+                   allAngles(c,b,a) = angle;
                    if possible == true
-                       angles(c,b,a) = angle;
+                      angles(c,b,a) = angle;
                    else
                        angles(c,b,a) = 0;
                    end
@@ -115,12 +130,6 @@ for a = 1:count
 end
 angles(isnan(angles)) = 0;        
                     
-%set the parameters for our input and the B.I.G dipper
-global edgesCount
-edgesCount = 7;     %How many edges are in the constellation?
-global maxEdges  %Which stars are left in the graph
-maxEdges = 3;
-
 
 %generate list with all edges && save the intercecting ones
 global edges;
@@ -140,19 +149,23 @@ global edges;
           y1 = coors(2, edges(1,n));
           x2 = coors(1, edges(2,n));
           y2 = coors(2, edges(2,n));
+          min1X = min([x1, x2]);
+          max1X = max([x1, x2]);
+          min1Y = min([y1, y2]);
+          max1Y = max([y1, y2]);
           for m = 1 : size(edges, 2)
             if m ~= n
                 x3 = coors(1, edges(1,m));
                 y3 = coors(2, edges(1,m));
                 x4 = coors(1, edges(2,m));
                 y4 = coors(2, edges(2,m));
-                minX = min([x1, x2, x3, x4]);
-                maxX = max([x1, x2, x3, x4]);
-                minY = min([y1, y2, y3, y4]);
-                maxY = max([y1, y2, y3, y4]);
+                min2X = min([x3, x4]);
+                max2X = max([x3, x4]);
+                min2Y = min([y3, y4]);
+                max2Y = max([y3, y4]);
                 pX = ((x1*y2 - y1*x2)*(x3-x4) - (x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                 pY = ((x1*y2 - y1*x2)*(y3-y4) - (y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
-                if minX < pX && pX < maxX && minY < pY && pY < maxY
+                if min1X < pX && pX < max1X && min1Y < pY && pY < max1Y && min2X < pX && pX < max2X && min2Y < pY && pY < max2Y
                     edges(count, n) = m;
                     count = count + 1;
                 end
@@ -160,10 +173,18 @@ global edges;
           end
     end
     
+%set the parameters for our input and the B.I.G dipper
+global edgesCount
+edgesCount = 7;     %How many edges are in the constellation?
+global maxEdges  %Which stars are left in the graph
+maxEdges = 3;
+global checkEdges
+checkEdges = zeros(size(edges, 2));
+checkEdges(1) = 1;
+checkEdges(2) = 5;
+checkEdges(3) = 1;
 
 %do dat mofuking BnB and save all possible solutions
-global allEdges
-allEdges = size(edges,2);
 global solution
 solution = 1;
 global solutions
@@ -171,7 +192,9 @@ solutions = 0;
 for n = 1 : (size(edges, 2));
     edgesX = zeros(2, (size(edges, 2)));
     edgesX(1, n) = 1;
-    edgesX(2, n) = 1;
+    for i = 1 : n
+        edgesX(2, i) = 1;
+    end
     for i = 4 : size(edges,1)
         if edges(i,n) ~= 0
             edgesX(2, edges(i,n)) = 1;
@@ -179,6 +202,16 @@ for n = 1 : (size(edges, 2));
     end
     BnB(edgesX);
 end
+
+
+%pr¸fen ob groﬂe wagen dabei ist
+for a = 1: size(solutions, 1)
+    if solutions(a, 11) == 1 && solutions(a, 21) == 1 && solutions(a, 35) == 1 && solutions(a, 42) == 1 && solutions(a, 43) == 1 && solutions(a, 52) == 1 && solutions(a, 54) == 1
+        var = 12
+    end
+end
+
+
 
 %einzeichnen
 for a = 1: size(solutions, 1)
@@ -219,11 +252,9 @@ for a = 1: size(solutions, 1)
     % break nur f¸r convenience, sonst rechnet er f¸r jeden test ~ 2 min
     % an der GHT
     % break; 
-    
+    %imshow(test);
     
 end
 
-
 %zeigt das letzte bild, das erstellt wurde (zu testzwecken)
-figure(1);
-imshow(test);
+
