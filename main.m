@@ -1,7 +1,8 @@
 %good score appears to be higher then 6
 clear all
-input = imread('input3.jpg');
+input = imread('input7.jpg');
 input_bw = im2bw(input, 0.9);
+imshow(input_bw);
 input_template = rgb2gray(imread('template.jpg'));
 
 %Connected Component Labeling:
@@ -28,59 +29,15 @@ for n = 1:count
    coors(:,n) = [row(1); col(1)];
 end
 
-%{
-save all angles in big Dipper (Großer Wagen)
-angles_bigDipper = [0.1, 3.6;
-                    4.8, 7.3;
-                    7.9, 10.0;
-                    11.5, 12.8;
-                    14.2, 16.4;
-                    16.6, 20.6;
-                    21.1, 22.3;
-                    22.6, 25.7;
-                    27.3, 28.3;
-                    28.9, 31.2;
-                    33.6, 36.0;
-                    39.1, 40.1;
-                    41.3, 42.3;
-                    48.6, 50.3;
-                    52.0, 53.0;
-                    73.6, 76.8;
-                    80.1, 81.1;
-                    82.7, 83.9;
-                    84.2, 85.2;
-                    88.2, 89.2;
-                    99.8, 100.8;
-                    103.3, 105.4;
-                    109.3, 110.3;
-                    113.9, 114.9;
-                    126.1, 129.7;
-                    133.8, 134.8;
-                    137.1, 138.1;
-                    139.7, 140.8;
-                    142.5, 143.9;
-                    149.6, 150.6;
-                    152.2, 153.2;
-                    155.8, 156.8;
-                    157.0, 158.0;
-                    158.1, 159.8;
-                    161.0, 162.4;
-                    163.8, 165.4;
-                    173.7, 174.7;
-                    176.0, 177.0;
-                    178.6, 180.0];
-anglesCount_bigDipper = 39;
-%}
-
 %save all angles in big Dipper (Großer Wagen)
-angles_bigDipper = [68, 78;
-                    74, 84;
-                    95, 105;
-                    100, 110;
-                    123, 133;
-                    135, 145;
-                    146, 156;
-                    169, 179;];
+angles_bigDipper = [70, 76;
+                    76, 82;
+                    97, 103;
+                    102, 108;
+                    125, 131;
+                    137, 143;
+                    147, 154;
+                    171, 177;];
 anglesCount_bigDipper = 8;
 
 %calculate angle between all nodes
@@ -173,6 +130,8 @@ checkEdges = zeros(size(edges, 2));
 checkEdges(1) = 1;
 checkEdges(2) = 5;
 checkEdges(3) = 1;
+global circleLength
+circleLength = 4;
 
 %do dat mofuking BnB and save all possible solutions
 global solution
@@ -194,12 +153,14 @@ for n = 1 : (size(edges, 2));
 end
 
 
-%prüfen ob große wagen dabei ist
+%{
+prüfen ob große wagen dabei ist
 for a = 1: size(solutions, 1)
     if solutions(a, 11) == 1 && solutions(a, 21) == 1 && solutions(a, 35) == 1 && solutions(a, 42) == 1 && solutions(a, 43) == 1 && solutions(a, 52) == 1 && solutions(a, 54) == 1
         var = 12
     end
 end
+%}
 
 
 
