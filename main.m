@@ -1,6 +1,6 @@
 %good score appears to be higher then 6
 clear all
-input = imread('input1.jpg');
+input = imread('input3.jpg');
 input_bw = im2bw(input, 0.9);
 input_template = rgb2gray(imread('template.jpg'));
 
@@ -11,16 +11,6 @@ input_label = bwlabel(input_bw); %TODO: implementieren
 %{
 [r, c] = find(input_label==19);
 rc = [r c]
-%}
-
-%draw line between two pixels
-%x0 = 340, y0 = 150 // x1 = 213, y1 = 258
-%{
-for n = 0:(1/round(sqrt((213-340)^2 + (258-150)^2))):1
-xn = round(340 +(213 - 340)*n);
-yn = round(150 +(258 - 150)*n);
-input_bw(xn,yn) = 1;
-end
 %}
 
 count = max(input_label(:));
@@ -222,26 +212,14 @@ for a = 1: size(solutions, 1)
                 x2 = coors(2, edges(2, b));
                 y1 = coors(1, edges(1, b));
                 y2 = coors(1, edges(2, b));
-                if x1 > x2
-                    tmp = x1;
-                    x1 = x2;
-                    x2 = tmp;
-                    tmp = y1;
-                    y1 = y2;
-                    y2 = tmp;
-                end
-                if x1 ~= x2
-                    m = (y2 - y1)/(x2 - x1);
-                else
-                    m = 1;
-                end
-                for x = x1 : x2
-                    y = round(m * (x - x1) + y1);
-                    test(y,x) = 1;
-                    test(y + 1,x) = 1;
-                    test(y - 1,x) = 1;
-                    test(y,x + 1) = 1;
-                    test(y,x - 1) = 1;
+                for n = 0:(1/round(sqrt((x2-x1)^2 + (y2-y1)^2))):1
+                yn = round(x1 +(x2 - x1)*n);
+                xn = round(y1 +(y2 - y1)*n);
+                test(xn,yn) = 1;
+                test(xn - 1,yn) = 1;
+                test(xn + 1,yn) = 1;
+                test(xn,yn - 1) = 1;
+                test(xn,yn + 1) = 1;
                 end
         end
     end
@@ -252,7 +230,7 @@ for a = 1: size(solutions, 1)
     % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
     % an der GHT
     % break; 
-    %imshow(test);
+    figure, imshow(test);
     
 end
 
