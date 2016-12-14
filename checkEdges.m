@@ -1,14 +1,16 @@
-function bool = checkEdges(edgesXY, n)
+function bool = checkEdges(unfSolution, checkEdge)
 global edges
 global checkEdges
 bool = true;
-vertex1 = edges(1, n);
-vertex2 = edges(2, n);
+vertex1 = edges(1, checkEdge);
+vertex2 = edges(2, checkEdge);
 countEdges = zeros(size(checkEdges));
+%save how often every vertex appears in the unfinished solution (incl. the
+%new one)...
 for j = 1 : 11
    count = 0;
-   for i = 1 : size(edgesXY, 2)
-      if edgesXY(1, i) == 1
+   for i = 1 : size(unfSolution, 2)
+      if unfSolution(1, i) == 1
           if edges(1, i) == j || edges(2, i) == j
               count = count + 1;
           end
@@ -21,6 +23,7 @@ for j = 1 : 11
         countEdges(count) = countEdges(count) + 1;
    end
 end
+%...and check if the numbers are possible within our constellation
 for j = 2 : size(checkEdges)
     if checkEdges(j) < countEdges(j)
         bool = false;

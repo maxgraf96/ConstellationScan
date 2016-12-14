@@ -1,11 +1,9 @@
-function [output] = main(input_bw, angleTolerance)
+function [output] = main(input_label, input, angleTolerance)
 
-%good score appears to be higher then 6
+%the template for the GHT
 input_template = rgb2gray(imread('template.jpg'));
 
-%Connected Component Labeling:
-input_label = bwlabel(input_bw); %TODO: implementieren
-
+%how many stars are in the constellation?
 count = max(input_label(:));
 
 %generate full graph
@@ -30,7 +28,6 @@ angles_bigDipper = [(73 - angleTolerance), (73 + angleTolerance);
                     (140 - angleTolerance), (140 + angleTolerance);
                     (152 - angleTolerance), (152 + angleTolerance);
                     (174 - angleTolerance), (174 + angleTolerance);];
-anglesCount_bigDipper = 8;
 
 %calculate angle between all nodes
 global angles;
@@ -50,7 +47,7 @@ for a = 1:count
                    %only add angles that could possibly appear in the
                    %constellation
                    possible = false;
-                   for i = 1 : anglesCount_bigDipper
+                   for i = 1 : size(angles_bigDipper, 1)
                        if angle >= angles_bigDipper(i, 1) && angle <= angles_bigDipper(i, 2)
                            possible = true;
                            break
@@ -70,7 +67,7 @@ end
 angles(isnan(angles)) = 0;        
 
 
-%generate list with all edges & save the intersecting ones
+%generate list with all edges
 global edges;
     j = 1;
     for n = 1 : count
@@ -92,6 +89,7 @@ global edges;
           max1X = max([x1, x2]);
           min1Y = min([y1, y2]);
           max1Y = max([y1, y2]);
+          %save the intersecting ones
           for m = 1 : size(edges, 2)
             if m ~= n
                 x3 = coors(1, edges(1,m));
@@ -112,43 +110,45 @@ global edges;
           end
     end
 
-%set the parameters for our input and the B.I.G dipper
+%set the specific parameters for the B.I.G dipper
 global edgesCount
 edgesCount = 7;     %How many edges are in the constellation?
-global maxEdges  %Which stars are left in the graph
-maxEdges = 3;
 global checkEdges
-checkEdges = zeros(size(edges, 2));
+checkEdges = zeros(size(edges, 2));   %How many vertices with x edges are in the constellation?
 checkEdges(1) = 1;
 checkEdges(2) = 5;
 checkEdges(3) = 1;
 global circleLength
-circleLength = 4;
+circleLength = 4;   %How long is the circle in the constellation?
 
 %do dat mofuking BnB and save all possible solutions
 global solution
-solution = 1;
+solution = 1;   %solutionCounter
 global solutions
-solutions = 0;
+solutions = 0;  %all found solutions
 for n = 1 : (size(edges, 2));
-    edgesX = zeros(2, (size(edges, 2)));
-    edgesX(1, n) = 1;
+    edgesBnB = zeros(2, (size(edges, 2)));
+    edgesBnB(1, n) = 1;
+    %don't consider previous edges...
     for i = 1 : n
-        edgesX(2, i) = 1;
+        edgesBnB(2, i) = 1;
     end
+    %...and the intersecting ones
     for i = 4 : size(edges,1)
         if edges(i,n) ~= 0
-            edgesX(2, edges(i,n)) = 1;
+            edgesBnB(2, edges(i,n)) = 1;
         end
     end
-    BnB(edgesX);
+    %do it!
+    BnB(edgesBnB);
 end
 
+%the scores from the ght
 scores = zeros(size(solutions, 1));
 
-%einzeichnen
+%draw it
 for a = 1: size(solutions, 1)
-    test = input_bw;
+    test = input_label;
     for b = 1 : size(solutions, 2)
         if solutions(a, b) == 1
                 x1 = coors(2, edges(1, b));
@@ -167,17 +167,12 @@ for a = 1: size(solutions, 1)
         end
     end
 
-    %figure, imshow(test);
     
-    %hier müsste die generalisierte hough trafo implementiert werden um zu
-    %checken ob es sich bereits um das richtige bild handelt
+    %compute the score of the picture compared with the template (ght)
     scores(a) = GHT(test, input_template, a, solution-1);
-    % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
-    % an der GHT
-    % break; 
 end
 
-%Zeichnen und zurückgeben des besten bildes.
+%find the best solution...
 best = 1;
 for i = 1:size(scores)
     if scores(i) > scores(best)
@@ -185,7 +180,8 @@ for i = 1:size(scores)
     end
 end
 
-output = input_bw;
+%...and draw it in the input picture
+output = input;
 for b = 1 : size(solutions, 2)
     if solutions(best, b) == 1
             x1 = coors(2, edges(1, b));
@@ -195,11 +191,11 @@ for b = 1 : size(solutions, 2)
             for n = 0:(1/round(sqrt((x2-x1)^2 + (y2-y1)^2))):1
             yn = round(x1 +(x2 - x1)*n);
             xn = round(y1 +(y2 - y1)*n);
-            output(xn,yn) = 1;
-            output(xn - 1,yn) = 1;
-            output(xn + 1,yn) = 1;
-            output(xn,yn - 1) = 1;
-            output(xn,yn + 1) = 1;
+            output(xn,yn,1:3) = 255;
+            output(xn - 1,yn,1:3) = 255;
+            output(xn + 1,yn,1:3) = 255;
+            output(xn,yn - 1,1:3) = 255;
+            output(xn,yn + 1,1:3) = 255;
             end
     end
 end

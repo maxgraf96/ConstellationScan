@@ -1,26 +1,34 @@
-function BnB(edgesX)
+function BnB(edgesBnB)
   global solution
   global solutions
   global edgesCount
   global edges
-  if sum(edgesX(1, :)) == edgesCount
-      if checkSolution(edgesX)
-        solutions(solution, 1: size(edgesX, 2)) = edgesX(1, :);
+  %check if there are already 7 edges in...
+  if sum(edgesBnB(1, :)) == edgesCount
+      ...and it's a possible solution
+      if checkSolution(edgesBnB)
+        solutions(solution, 1: size(edgesBnB, 2)) = edgesBnB(1, :);
         solution = solution + 1;
       end
-  else if size(edgesX, 2) - sum(edgesX(2, :)) + sum(edgesX(1, :)) >= edgesCount
-          for i = 1 : size(edgesX, 2)
-              if edgesX(2, i) == 0
-                  edgesX(2, i) = 1;
-                    if hasConnectionNew(edgesX, i)
-                      edgesZ = edgesX;
-                      edgesZ(1, i) = 1;
+  %otherwise put the next possible edge in our solution
+  else if size(edgesBnB, 2) - sum(edgesBnB(2, :)) + sum(edgesBnB(1, :)) >= edgesCount
+          for i = 1 : size(edgesBnB, 2)
+              %check if we haven't considered the edge yet..
+              if edgesBnB(2, i) == 0
+                  edgesBnB(2, i) = 1;
+                    %...and if there's a connection to our graph
+                    if hasConnectionNew(edgesBnB, i)
+                      %add the new edge to our graph...
+                      edgesNextBnB = edgesBnB;
+                      edgesNextBnB(1, i) = 1;
+                      %...and mark his intersecting edges as considered
                       for j = 4 : size(edges,1)
                           if edges(j,i) ~= 0
-                             edgesZ(2, edges(j,i)) = 1;
+                             edgesNextBnB(2, edges(j,i)) = 1;
                           end
                       end
-                      BnB(edgesZ)
+                      %do it again!
+                      BnB(edgesNextBnB)
                     end
               end
           end
