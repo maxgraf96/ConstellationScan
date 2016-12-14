@@ -1,4 +1,4 @@
-function [BestScore]= MAIN_find_object_in_image(Is,Itm)
+function [BestScore]= MAIN_find_object_in_image(Is,Itm,current,total)
 %{
 Find an object that fit Template Itm in image Is.
 The orientation of the template and the object in the image does not have to be the same as that as the template. 
@@ -26,15 +26,13 @@ The angle and location in the image that gave the best match for the template ar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%initialize optiona paramters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Itm=logical(Itm);% make sure Itm is boolean image
 BestScore=-100000;
-close all;
-imtool close all;
 %%%%%%%%%%%%%%%%Some parameters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555555555
 St=size(Itm);
 Ss=size(Is);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Main Scan  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for Ang=1:1:360 % rotate the template Itm 1 degree at the time and look for it in the image Is
     
-  disp([num2str((Ang)/3.6) '% Scanned']);
+  disp([num2str((((Ang)/3.6) + (current - 1)*100)/total) '% Scanned']);
   Itr=Rotate_binary_edge_image(Itm,Ang);
 %----------------------------------------------------------------------------------------------------------------------------------------- 
  % the actuall recogniton step of the resize template Itm in the orginal image Is and return location of best match and its score can occur in one of three modes given in search_mode

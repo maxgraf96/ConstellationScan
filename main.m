@@ -1,18 +1,10 @@
+function [output] = main(input_bw, angleTolerance)
+
 %good score appears to be higher then 6
-clear all
-input = imread('input7.jpg');
-input_bw = im2bw(input, 0.9);
-imshow(input_bw);
 input_template = rgb2gray(imread('template.jpg'));
 
 %Connected Component Labeling:
 input_label = bwlabel(input_bw); %TODO: implementieren
-
-%get pixels of component
-%{
-[r, c] = find(input_label==19);
-rc = [r c]
-%}
 
 count = max(input_label(:));
 
@@ -76,9 +68,9 @@ for a = 1:count
    end
 end
 angles(isnan(angles)) = 0;        
-                    
 
-%generate list with all edges && save the intercecting ones
+
+%generate list with all edges & save the intersecting ones
 global edges;
     j = 1;
     for n = 1 : count
@@ -119,7 +111,7 @@ global edges;
              end
           end
     end
-    
+
 %set the parameters for our input and the B.I.G dipper
 global edgesCount
 edgesCount = 7;     %How many edges are in the constellation?
@@ -152,21 +144,11 @@ for n = 1 : (size(edges, 2));
     BnB(edgesX);
 end
 
-
-%{
-prüfen ob große wagen dabei ist
-for a = 1: size(solutions, 1)
-    if solutions(a, 11) == 1 && solutions(a, 21) == 1 && solutions(a, 35) == 1 && solutions(a, 42) == 1 && solutions(a, 43) == 1 && solutions(a, 52) == 1 && solutions(a, 54) == 1
-        var = 12
-    end
-end
-%}
-
-
+scores = zeros(1, size(solutions, 1));
 
 %einzeichnen
 for a = 1: size(solutions, 1)
-    test = input_label;
+    test = input_bw;
     for b = 1 : size(solutions, 2)
         if solutions(a, b) == 1
                 x1 = coors(2, edges(1, b));
@@ -184,16 +166,43 @@ for a = 1: size(solutions, 1)
                 end
         end
     end
+
+    figure;
+    imshow(test);
     
     %hier müsste die generalisierte hough trafo implementiert werden um zu
     %checken ob es sich bereits um das richtige bild handelt
-    %MAIN_find_object_in_image(test, input_template);
+    scores(1, a) = MAIN_find_object_in_image(test, input_template, a, solution-1);
     % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
     % an der GHT
     % break; 
-    figure, imshow(test);
-    
 end
 
-%zeigt das letzte bild, das erstellt wurde (zu testzwecken)
+%Zeichnen und zurückgeben des besten bildes.
+best = 1;
+for i = 1:size(scores)
+    if scores(i) > scores(best)
+        best = i;
+    end
+end
+
+output = input_bw;
+for b = 1 : size(solutions, 2)
+    if solutions(best, b) == 1
+            x1 = coors(2, edges(1, b));
+            x2 = coors(2, edges(2, b));
+            y1 = coors(1, edges(1, b));
+            y2 = coors(1, edges(2, b));
+            for n = 0:(1/round(sqrt((x2-x1)^2 + (y2-y1)^2))):1
+            yn = round(x1 +(x2 - x1)*n);
+            xn = round(y1 +(y2 - y1)*n);
+            output(xn,yn) = 1;
+            output(xn - 1,yn) = 1;
+            output(xn + 1,yn) = 1;
+            output(xn,yn - 1) = 1;
+            output(xn,yn + 1) = 1;
+            end
+    end
+end
+end
 
