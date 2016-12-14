@@ -171,7 +171,7 @@ for a = 1: size(solutions, 1)
     
     %hier müsste die generalisierte hough trafo implementiert werden um zu
     %checken ob es sich bereits um das richtige bild handelt
-    scores(a) = MAIN_find_object_in_image(test, input_template, a, solution-1);
+    scores(a) = GHT(test, input_template, a, solution-1);
     % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
     % an der GHT
     % break; 

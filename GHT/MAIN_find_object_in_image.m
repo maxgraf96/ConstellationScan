@@ -1,4 +1,4 @@
-function [Ismarked,Iborders,Ybest,Xbest, ItmAng, BestScore]= MAIN_find_object_in_image(Is,Itm)
+function [Ismarked,Iborders,Ybest,Xbest, ItmAng, BestScore]= GHT(Is,Itm)
 %{
 Find an object that fit Template Itm in image Is.
 The orientation of the template and the object in the image does not have to be the same as that as the template. 
