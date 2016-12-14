@@ -22,14 +22,14 @@ for n = 1:count
 end
 
 %save all angles in big Dipper (Großer Wagen)
-angles_bigDipper = [70, 76;
-                    76, 82;
-                    97, 103;
-                    102, 108;
-                    125, 131;
-                    137, 143;
-                    147, 154;
-                    171, 177;];
+angles_bigDipper = [(73 - angleTolerance), (73 + angleTolerance);
+                    (79 - angleTolerance), (79 + angleTolerance);
+                    (101 - angleTolerance), (101 + angleTolerance);
+                    (105 - angleTolerance), (105 + angleTolerance);
+                    (128 - angleTolerance), (128 + angleTolerance);
+                    (140 - angleTolerance), (140 + angleTolerance);
+                    (152 - angleTolerance), (152 + angleTolerance);
+                    (174 - angleTolerance), (174 + angleTolerance);];
 anglesCount_bigDipper = 8;
 
 %calculate angle between all nodes
@@ -144,7 +144,7 @@ for n = 1 : (size(edges, 2));
     BnB(edgesX);
 end
 
-scores = zeros(1, size(solutions, 1));
+scores = zeros(size(solutions, 1));
 
 %einzeichnen
 for a = 1: size(solutions, 1)
@@ -167,12 +167,11 @@ for a = 1: size(solutions, 1)
         end
     end
 
-    figure;
-    imshow(test);
+    %figure, imshow(test);
     
     %hier müsste die generalisierte hough trafo implementiert werden um zu
     %checken ob es sich bereits um das richtige bild handelt
-    scores(1, a) = MAIN_find_object_in_image(test, input_template, a, solution-1);
+    scores(a) = MAIN_find_object_in_image(test, input_template, a, solution-1);
     % break nur für convenience, sonst rechnet er für jeden test ~ 2 min
     % an der GHT
     % break; 
