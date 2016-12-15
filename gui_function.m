@@ -89,7 +89,7 @@ imshow(input_label);
         se = strel('disk',round((sqrt(size(input_bw, 1) * size(input_bw, 2))/100)));
         input_closed = imdilate(input_bw,se);
         
-        input_label = bwlabel(input_closed);
+        input_label = CCL(input_closed);
         count_closed = max(input_label(:));
        
         
