@@ -22,12 +22,12 @@ end
                 j = j - 1;
             end
             while j ~= size(I,2) && I(i,j)==1
-                I(i,j) = currentlabel;
+                %I(i,j) = currentlabel;
                 Z(i,j) = currentlabel;
                 j = j+1;
             end
             if j == size(I,2) && I(i,j)==1
-                I(i,j) = currentlabel;
+                %I(i,j) = currentlabel;
                 Z(i,j) = currentlabel;
             end
             if I(i,tmpJ+1) ~= 0 && I(i+1,tmpJ+1) ~= 0
@@ -42,12 +42,12 @@ end
                 j = j - 1;
             end
             while j ~= size(I,2) && I(i,j)==1
-                I(i,j) = currentlabel;
+                %I(i,j) = currentlabel;
                 Z(i,j) = currentlabel;
                 j = j+1;
             end
             if j == size(I,2) && I(i,j)==1
-                I(i,j) = currentlabel;
+                %I(i,j) = currentlabel;
                 Z(i,j) = currentlabel;
             end
         end
