@@ -12,5 +12,7 @@ Dx=imfilter(input,[1  -1]);% y sobel first derivative
 
 %note that this expression can reach infinity if dx is zero 
 %mathlab aparently get over it but you can use the folowing expression instead slower but safer: 
-output=mod(atan2(Dy,Dx)+pi(), pi());
+
+%output=mod(atan2(Dy,Dx)+pi(), pi());
+output=(atan2(Dy,Dx)+pi());
 end

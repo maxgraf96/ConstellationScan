@@ -1,4 +1,4 @@
-function [score] = Generalized_hough_transform(input,template) 
+function [score] = Generalized_hough_transform(input, inputEdgeImage,template) 
 %Find template/shape Itm in greyscale image Is using generalize hough trasform
 %show the image with the template marked on it
 %Use generalized hough transform to find Template/shape binary image given in binary image Itm inimage Is (greyscale image)
@@ -9,13 +9,12 @@ function [score] = Generalized_hough_transform(input,template)
 %input is greyscale  picture were the template Itm should be found 
 %template is binary edge image of the template with edges marked 1 and the rest 0
 
-
 % OUTPUT
 %Score of the best match
 
-%--------------------------create edge and system edge images------------------------------------------------------------------------------------------------------------------------
+%edgeImage
+edgeImage = inputEdgeImage;
 
-edgeImage=edge(input,'canny'); % Take canny edge images of Is with automatic threshold
 %}
 %--------------------------------------------------------------------------------------------------------------------------------------
 [y ,x]=find(template>0); % find all coordinates which are 1 in binary image
@@ -70,7 +69,7 @@ end;
 GradientMap=gradient_direction(input); % create gradient direction map of the input
 Ss=size(input); % Size of the main image input
 houghspace=zeros(size(input));% the hough space is assumed to be the same size of the image
-    for i=1:1:np(1)
+    for i=1:5:np(1)
           bin=round((GradientMap(y(i), x(i))/pi)*(MaxAnglesBins-1))+1; % transform from continues gradient angles to discrete angle bins and 
 
           for fb=1:1:PointCounter(bin)

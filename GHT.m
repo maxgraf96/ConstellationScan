@@ -24,12 +24,13 @@ BestScore=-100000;
 St=size(template);
 Ss=size(input);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Main Scan  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+edgeImage=edge(input,'canny');
 for Ang=0:5:360 % rotate the template Itm 1 degree at the time and look for it in the image Is
   disp([num2str((((Ang)/3.6) + (current - 1)*100)/total) '% Scanned']);
   Itr=imrotate(template,Ang);
 %----------------------------------------------------------------------------------------------------------------------------------------- 
  % the actuall recogniton step of the resize template Itm in the orginal image Is and return location of best match and its score can occur in one of three modes given in search_mode
-             score = Generalized_hough_transform(input,Itr);% use generalized hough transform to find the template in the image
+             score = Generalized_hough_transform(input, edgeImage, Itr);% use generalized hough transform to find the template in the image
      %--------------------------if the correct match score is better then previous best match write the paramter of the match as the new best match------------------------------------------------------
      if (score>BestScore) % if item  result scored higher then the previous result
            BestScore=score;% remember best score
