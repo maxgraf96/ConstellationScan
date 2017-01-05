@@ -5,14 +5,14 @@ function [ output ] = gradient_direction( input )
 %negative directions
 %the picture
 
-input=double(input);%convert image to double to accumulate for negative values
+input = double(input);% convert image to double to accumulate for negative values
 %-------------------------------------------------------------------
-Dy=imfilter(input,[1; -1]);%x first derivative sobel mask
-Dx=imfilter(input,[1  -1]);% y sobel first derivative
+Dy = imfilter(input,[1; -1]); % x first derivative sobel mask
+Dx = imfilter(input,[1  -1]); % y sobel first derivative
 
-%note that this expression can reach infinity if dx is zero 
-%mathlab aparently get over it but you can use the folowing expression instead slower but safer: 
+% note that this expression can reach infinity if dx is zero 
 
-%output=mod(atan2(Dy,Dx)+pi(), pi());
-output=(atan2(Dy,Dx)+pi());
+% output = mod(atan2(Dy,Dx)+pi(), pi());
+output = (atan2(Dy,Dx) + pi());
+
 end

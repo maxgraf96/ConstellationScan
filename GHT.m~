@@ -1,0 +1,31 @@
+function [BestScore]= GHT(input,template,current,total)
+%{
+Input:
+input: One of the solutions from BnB algorithm.
+template: Template of the object to be found as a binary image. Only the
+edges are stored (white boundaries).
+current: current solution we are looking at
+total: total solutions to be looked at
+
+Output:
+BestScore: Score of the best match found in the scan.
+
+%}
+
+template = logical(template); % make sure template is boolean image
+BestScore = -100000;
+
+edgeImage = edge(input,'canny');
+
+for Ang = 0 : 5 : 360 % rotate the template 5 degres at a time and look for it in the input image 
+  disp([num2str((((Ang)/3.6) + (current - 1)*100)/total) '% Scanned']);
+  Itr=imrotate(template,Ang);
+%----------------------------------------------------------------------------------------------------------------------------------------- 
+ % the actuall recogniton step of the resize template Itm in the orginal image Is and return location of best match and its score can occur in one of three modes given in search_mode
+             score = Generalized_hough_transform(input, edgeImage, Itr);% use generalized hough transform to find the template in the image
+     %--------------------------if the correct match score is better then previous best match write the paramter of the match as the new best match------------------------------------------------------
+     if (score>BestScore) % if item  result scored higher then the previous result
+           BestScore=score;% remember best score
+     end;
+end;
+end

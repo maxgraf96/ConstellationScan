@@ -25,10 +25,11 @@ GradientMap = gradient_direction(template);
 
 % Create an R-Table of template gradients to parameter space.
 % The R-Table fully represents the template object
+% Winkelraum in MaxAnglesBins Anzahl in "Rastern" einteilen
 MaxAnglesBins = 30;% divide the angle space to MaxAnglesBins uniformed space bins
 MaxPointsPerangle = pointsInTemplate(1); % maximal amount of points corresponding to specific angle
 
-PointCounter = zeros(MaxAnglesBins); % counter for the amount of edge points associated with each angel gradient
+PointCounter = zeros(MaxAnglesBins); % counter for the amount of edge points associate with each angel gradient
 
 % assume maximum of 100 points per angle with MaxAngelsBins angles bins between zero and pi and x,y for the vector to the center of each point
 % in the second dimension we store the vectors from the point to the center of the
@@ -76,10 +77,13 @@ houghspace = zeros(size(input));% the hough space is assumed to be of the same s
 
 % normalized according to template size (fraction of the template points
 % which were found)
-houghNormalized = houghspace;% Itr becomes the new score matrix
-houghNormalized = houghNormalized ./ sqrt(sum(sum(template)));% normalize score match by the number of pixels in the template to avoid bias towards large template
+Itr = houghspace;% Itr becomes the new score matrix
+Itr = Itr ./ sqrt(sum(sum(template)));% normalize score match by the number of pixels in the template to avoid bias towards large template
+% find  the location best score all scores which are close enough to the best score
 
-score = max(max(houghNormalized)); % find the max score 
+mx = max(max(Itr));% find the max score location
+[y,x] = find(Itr == mx, 1, 'first');
+score = Itr(y,x); % find max score in the hough space 
 
 end
 
