@@ -24,10 +24,10 @@ angles_bigDipper = [(73 - angleTolerance), (73 + angleTolerance);
                     (79 - angleTolerance), (79 + angleTolerance);
                     (101 - angleTolerance), (101 + angleTolerance);
                     (105 - angleTolerance), (105 + angleTolerance);
-                    (128 - angleTolerance), (128 + angleTolerance);
+                    (127 - angleTolerance), (127 + angleTolerance);
                     (140 - angleTolerance), (140 + angleTolerance);
                     (152 - angleTolerance), (152 + angleTolerance);
-                    (174 - angleTolerance), (174 + angleTolerance);];
+                    (175 - angleTolerance), (175 + angleTolerance);];
 
 %calculate angle between all nodes
 global angles;
@@ -127,6 +127,7 @@ solution = 1;   %solutionCounter
 global solutions
 solutions = 0;  %all found solutions
 for n = 1 : (size(edges, 2));
+    disp([num2str(round((n / (size(edges, 2)))*100)) '% BnB 0% GHT']);
     edgesBnB = zeros(2, (size(edges, 2)));
     edgesBnB(1, n) = 1;
     %don't consider previous edges...
@@ -146,30 +147,38 @@ end
 %the scores from the ght
 scores = zeros(size(solutions, 1));
 
-%draw it
-for a = 1: size(solutions, 1)
-    test = input_label;
-    for b = 1 : size(solutions, 2)
-        if solutions(a, b) == 1
-                x1 = coors(2, edges(1, b));
-                x2 = coors(2, edges(2, b));
-                y1 = coors(1, edges(1, b));
-                y2 = coors(1, edges(2, b));
-                for n = 0:(1/round(sqrt((x2-x1)^2 + (y2-y1)^2))):1
-                yn = round(x1 +(x2 - x1)*n);
-                xn = round(y1 +(y2 - y1)*n);
-                test(xn,yn) = 1;
-                test(xn - 1,yn) = 1;
-                test(xn + 1,yn) = 1;
-                test(xn,yn - 1) = 1;
-                test(xn,yn + 1) = 1;
-                end
+if sum(solutions(1, :)) > 0
+    disp([num2str(size(solutions, 1)) ' Solutions found!']);
+    %draw it
+    for a = 1: size(solutions, 1)
+        test = input_label;
+        for b = 1 : size(solutions, 2)
+            if solutions(a, b) == 1
+                    x1 = coors(2, edges(1, b));
+                    x2 = coors(2, edges(2, b));
+                    y1 = coors(1, edges(1, b));
+                    y2 = coors(1, edges(2, b));
+                    for n = 0:(1/round(sqrt((x2-x1)^2 + (y2-y1)^2))):1
+                    yn = round(x1 +(x2 - x1)*n);
+                    xn = round(y1 +(y2 - y1)*n);
+                    test(xn,yn) = 1;
+                        for  z = 1 : round((sqrt(size(input_label, 1) * size(input_label, 2))/100))
+                            test(xn - z,yn) = 1;
+                            test(xn + z,yn) = 1;
+                            test(xn,yn - z) = 1;
+                            test(xn,yn + z) = 1;
+                        end
+                    end
+            end
         end
-    end
+        %figure, imshow(test);
 
-    
-    %compute the score of the picture compared with the template (ght)
-    scores(a) = GHT(test, input_template, a, solution-1);
+
+        %compute the score of the picture compared with the template (ght)
+        scores(a) = GHT(test, input_template, a, solution-1);
+    end
+else 
+    disp('No solution found');
 end
 
 %find the best solution...

@@ -1,4 +1,4 @@
-function [BestScore]= GHT(input,template,current,total)
+function [BestScore]= GHT(input,template, current,total)
 %{
 Input:
 input: One of the solutions from BnB algorithm.
@@ -18,13 +18,13 @@ BestScore = -100000;
 edgeImage = edge(input,'canny');
 
 for Ang = 0 : 5 : 360 % rotate the template 5 degres at a time and look for it in the input image 
-    disp([num2str((((Ang) / 3.6) + (current - 1) * 100) / total) '% Scanned']);
+    disp(['100% BnB ' num2str(round((((Ang) / 3.6) + (current - 1) * 100) / total)) '% GHT']);
     template_rotated = imrotate(template,Ang);
   
-    score = Generalized_hough_transform(input, edgeImage, template_rotated);% use generalized hough transform to find the template in the image
+    score = Generalized_hough_transform(input, edgeImage, template_rotated);
      % save the best score
      if (score > BestScore)
          BestScore=score;
-     end;
+     end
 end;
 end

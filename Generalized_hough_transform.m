@@ -17,8 +17,8 @@ if (pointsInTemplate < 1)
 end
 
 % Object center
-Cy = 1;
-Cx = 1;
+Cy = round(mean(y));
+Cx = round(mean(x));
 
 % create gradient map of template, values between zero to pi 
 GradientMap = gradient_direction(template);
@@ -62,7 +62,7 @@ end;
 GradientMap = gradient_direction(input); % create gradient direction map of the input
 Ss = size(input); % Size of the main image input
 houghspace = zeros(size(input));% the hough space is assumed to be of the same size as the image
-    for i = 1 : 100 : pointsInEdgeImage(1)
+    for i = 1 : round((sqrt(size(input, 1) * size(input, 2))/100))*2 : pointsInEdgeImage(1)
           bin = round((GradientMap(y(i), x(i))/pi) * (MaxAnglesBins-1)) + 1; % transform from continues gradient angles to discrete angle bins
           for point = 1 : 1 : PointCounter(bin)
               ty = Rtable(bin, point, 1) + y(i);
