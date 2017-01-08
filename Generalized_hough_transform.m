@@ -62,7 +62,7 @@ end;
 GradientMap = gradient_direction(input); % create gradient direction map of the input
 Ss = size(input); % Size of the main image input
 houghspace = zeros(size(input));% the hough space is assumed to be of the same size as the image
-    for i = 1 : 20 : pointsInEdgeImage(1)
+    for i = 1 : 1 : pointsInEdgeImage(1)
           bin = round((GradientMap(y(i), x(i))/pi) * (MaxAnglesBins-1)) + 1; % transform from continues gradient angles to discrete angle bins
           for point = 1 : 1 : PointCounter(bin)
               ty = Rtable(bin, point, 1) + y(i);

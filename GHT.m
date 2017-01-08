@@ -16,13 +16,13 @@ BestScore = -100000;
 
 % edgeImage is calculated outside the loop because it is always the same
 input = imresize(input, size(template));
-edgeImage = edge(input,'canny');
+%edgeImage = edge(input,'canny');
 
 for Ang = 0 : 2 : 360 % rotate the template 5 degres at a time and look for it in the input image 
     disp(['100% BnB ' num2str(round((((Ang) / 3.6) + (current - 1) * 100) / total)) '% GHT']);
     template_rotated = imrotate(template,Ang);
   
-    score = Generalized_hough_transform(input, edgeImage, template_rotated);
+    score = Generalized_hough_transform(input, input, template_rotated);
      % save the best score
      if (score > BestScore)
          BestScore=score;
