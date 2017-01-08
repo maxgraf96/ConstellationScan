@@ -166,10 +166,12 @@ if sum(solutions(1, :)) > 0
                     xn = round(y1 +(y2 - y1)*n);
                     test(xn,yn) = 1;
                          for  z = 1 : round((sqrt(size(input_label, 1) * size(input_label, 2))/100))
+                             if (xn - z) > 0 && (yn - z) > 0 && (yn + z) < size(input_label, 2) && (xn + z) < size(input_label, 1)
                              test(xn - z,yn) = 1;
                              test(xn + z,yn) = 1;
                              test(xn,yn - z) = 1;
                              test(xn,yn + z) = 1;
+                             end
                          end
                     end
             end
@@ -205,10 +207,12 @@ for b = 1 : size(solutions, 2)
             yn = round(x1 +(x2 - x1)*n);
             xn = round(y1 +(y2 - y1)*n);
             output(xn,yn,1:3) = 255;
+            if (xn - 1) > 0 && (yn - 1) > 0 && (yn + 1) < size(input_label, 2) && (xn + 1) < size(input_label, 1)
             output(xn - 1,yn,1:3) = 255;
             output(xn + 1,yn,1:3) = 255;
             output(xn,yn - 1,1:3) = 255;
             output(xn,yn + 1,1:3) = 255;
+            end
             end
     end
 end
