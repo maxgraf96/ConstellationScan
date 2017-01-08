@@ -1,3 +1,3 @@
 clear all
-input = imread('NeuBilder/input028.jpg');
+input = imread('input_placeholder.jpg');
 gui_function(input);

@@ -1,7 +1,0 @@
-Settings:
-
-
-Input 2: TH: 0.87195, AT: 2.0842
-Input 3: TH: 9.83158, AT: 2.7684
-Input 4: TH : 0.75789, AT: 2.4
-Input 5: TH: 0.70263, AT: 4.4316

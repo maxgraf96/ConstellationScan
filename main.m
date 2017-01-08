@@ -113,7 +113,7 @@ global edges;
           end
     end
 
-%set the specific parameters for the B.I.G dipper
+%set the specific parameters for the big dipper
 global edgesCount
 edgesCount = 7;     %How many edges are in the constellation?
 global checkEdges
@@ -147,7 +147,6 @@ for n = 1 : (size(edges, 2));
     BnB(edgesBnB);
 end
 
-figure
 %the scores from the ght
 scores = zeros(size(solutions, 1));
 if sum(solutions(1, :)) > 0
@@ -176,8 +175,6 @@ if sum(solutions(1, :)) > 0
                     end
             end
         end
-        imshow(test);
-
 
         %compute the score of the picture compared with the template (ght)
         scores(a) = GHT(test, input_template, a, solution-1);
@@ -188,7 +185,6 @@ end
 
 %find the best solution...
 best = 1;
-scores
 for i = 1:size(scores)
     if scores(i) > scores(best)
         best = i;
