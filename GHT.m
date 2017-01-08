@@ -15,9 +15,10 @@ template = logical(template); % make sure template is boolean image
 BestScore = -100000;
 
 % edgeImage is calculated outside the loop because it is always the same
+input = imresize(input, size(template));
 edgeImage = edge(input,'canny');
 
-for Ang = 0 : 5 : 360 % rotate the template 5 degres at a time and look for it in the input image 
+for Ang = 0 : 2 : 360 % rotate the template 5 degres at a time and look for it in the input image 
     disp(['100% BnB ' num2str(round((((Ang) / 3.6) + (current - 1) * 100) / total)) '% GHT']);
     template_rotated = imrotate(template,Ang);
   

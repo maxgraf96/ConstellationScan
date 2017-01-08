@@ -105,7 +105,7 @@ imshow(input_label);
         
         input_bw = im2bw(input, threshold_value);
        
-        se = strel('disk',round(((sqrt(size(input_bw, 1) * size(input_bw, 2))/100))/1));
+        se = strel('disk',round((sqrt(size(input_bw, 1) * size(input_bw, 2))/100)));
         input_closed = imdilate(input_bw,se);       
         
         cla(axesThreshold);

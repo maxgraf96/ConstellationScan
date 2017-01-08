@@ -4,41 +4,44 @@ function [output] = main(input_label, input, angleTolerance)
 input_template = rgb2gray(imread('template.jpg'));
 
 %how many stars are in the constellation?
-count = max(input_label(:));
+global starsCount;
+starsCount = max(input_label(:));
 
 %generate full graph
-graph = ones(count);
-for n = 1:count
+graph = ones(starsCount);
+for n = 1:starsCount
    graph(n,n) = 0;
 end
 
 %save coordinates for each node
-coors = zeros(2,count);
-for n = 1:count
+coors = zeros(2,starsCount);
+for n = 1:starsCount
    [row,col] = find(input_label == n);
    coors(:,n) = [row(1); col(1)];
 end
 
+
 %save all angles in big Dipper (Großer Wagen)
+global angles_bigDipper
 angles_bigDipper = [(73 - angleTolerance), (73 + angleTolerance);
-                    (79 - angleTolerance), (79 + angleTolerance);
+                    (85 - angleTolerance), (85 + angleTolerance);
                     (101 - angleTolerance), (101 + angleTolerance);
                     (105 - angleTolerance), (105 + angleTolerance);
-                    (127 - angleTolerance), (127 + angleTolerance);
-                    (140 - angleTolerance), (140 + angleTolerance);
+                    (124 - angleTolerance), (124 + angleTolerance);
+                    (142 - angleTolerance), (142 + angleTolerance);
                     (152 - angleTolerance), (152 + angleTolerance);
-                    (175 - angleTolerance), (175 + angleTolerance);];
+                    (178 - angleTolerance), (178 + angleTolerance);];
 
 %calculate angle between all nodes
 global angles;
-angles = zeros(count);
-allAngles = zeros(count);
-for a = 1:count
+angles = zeros(starsCount);
+allAngles = zeros(starsCount);
+for a = 1:starsCount
    mainnode = [coors(1,a), coors(2,a)];
-   for b = 1:count
+   for b = 1:starsCount
        if a ~= b
            extnode1 = [coors(1,b), coors(2,b)];
-           for c = 1:count
+           for c = 1:starsCount
                if b ~= c
                    extnode2 = [coors(1,c), coors(2,c)];
                    vec1 = mainnode - extnode1;
@@ -70,8 +73,8 @@ angles(isnan(angles)) = 0;
 %generate list with all edges
 global edges;
     j = 1;
-    for n = 1 : count
-       for m = n : count
+    for n = 1 : starsCount
+       for m = n : starsCount
            if graph(n,m) == 1
               edges(1,j) = n;
               edges(2,j) = m;
@@ -121,7 +124,7 @@ checkEdges(3) = 1;
 global circleLength
 circleLength = 4;   %How long is the circle in the constellation?
 
-%do dat mofuking BnB and save all possible solutions
+%do the BnB and save all possible solutions
 global solution
 solution = 1;   %solutionCounter
 global solutions
@@ -144,14 +147,14 @@ for n = 1 : (size(edges, 2));
     BnB(edgesBnB);
 end
 
+figure
 %the scores from the ght
 scores = zeros(size(solutions, 1));
-
 if sum(solutions(1, :)) > 0
     disp([num2str(size(solutions, 1)) ' Solutions found!']);
     %draw it
     for a = 1: size(solutions, 1)
-        test = input_label;
+        test = zeros(size(input_label));
         for b = 1 : size(solutions, 2)
             if solutions(a, b) == 1
                     x1 = coors(2, edges(1, b));
@@ -171,7 +174,7 @@ if sum(solutions(1, :)) > 0
                     end
             end
         end
-        %figure, imshow(test);
+        imshow(test);
 
 
         %compute the score of the picture compared with the template (ght)
