@@ -37,7 +37,7 @@ Rtable = zeros(MaxAnglesBins, MaxPointsPerangle, 2); % in this case 30 x 6000 x 
 
 
 % fill the angle bins with points in the Rtable
-for i = 1 : 1 : pointsInTemplate(1)
+for i = 1 : 2 : pointsInTemplate(1)
     bin = round((GradientMap(y(i), x(i)) / pi) * (MaxAnglesBins - 1)) + 1; % transform from continuous gradient angles to discrete angle bins and 
     PointCounter(bin) = PointCounter(bin) + 1;% add one to the number of points in the bin
     if (PointCounter(bin) > MaxPointsPerangle)
@@ -62,7 +62,7 @@ end;
 GradientMap = gradient_direction(input); % create gradient direction map of the input
 Ss = size(input); % Size of the main image input
 houghspace = zeros(size(input));% the hough space is assumed to be of the same size as the image
-    for i = 1 : 1 : pointsInEdgeImage(1)
+    for i = 1 : 2 : pointsInEdgeImage(1)
           bin = round((GradientMap(y(i), x(i))/pi) * (MaxAnglesBins-1)) + 1; % transform from continues gradient angles to discrete angle bins
           for point = 1 : 1 : PointCounter(bin)
               ty = Rtable(bin, point, 1) + y(i);

@@ -1,7 +1,7 @@
 function [output] = main(input_label, input, angleTolerance)
 
 %the template for the GHT
-input_template = rgb2gray(imread('template2.jpg'));
+input_template = rgb2gray(imread('template_neu.jpg'));
 
 %how many stars are in the constellation?
 global starsCount;
@@ -165,12 +165,12 @@ if sum(solutions(1, :)) > 0
                     yn = round(x1 +(x2 - x1)*n);
                     xn = round(y1 +(y2 - y1)*n);
                     test(xn,yn) = 1;
-%                         for  z = 1 : round((sqrt(size(input_label, 1) * size(input_label, 2))/100))
-%                             test(xn - z,yn) = 1;
-%                             test(xn + z,yn) = 1;
-%                             test(xn,yn - z) = 1;
-%                             test(xn,yn + z) = 1;
-%                         end
+                         for  z = 1 : round((sqrt(size(input_label, 1) * size(input_label, 2))/100))
+                             test(xn - z,yn) = 1;
+                             test(xn + z,yn) = 1;
+                             test(xn,yn - z) = 1;
+                             test(xn,yn + z) = 1;
+                         end
                     end
             end
         end
