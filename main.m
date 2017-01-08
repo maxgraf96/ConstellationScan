@@ -24,13 +24,13 @@ end
 %save all angles in big Dipper (Großer Wagen)
 global angles_bigDipper
 angles_bigDipper = [(73 - angleTolerance), (73 + angleTolerance);
-                    (85 - angleTolerance), (85 + angleTolerance);
+                    (79 - angleTolerance), (79 + angleTolerance);
                     (101 - angleTolerance), (101 + angleTolerance);
                     (105 - angleTolerance), (105 + angleTolerance);
-                    (124 - angleTolerance), (124 + angleTolerance);
-                    (142 - angleTolerance), (142 + angleTolerance);
+                    (128 - angleTolerance), (128 + angleTolerance);
+                    (140 - angleTolerance), (140 + angleTolerance);
                     (152 - angleTolerance), (152 + angleTolerance);
-                    (178 - angleTolerance), (178 + angleTolerance);];
+                    (174 - angleTolerance), (174 + angleTolerance);];
 
 %calculate angle between all nodes
 global angles;
@@ -186,6 +186,7 @@ end
 
 %find the best solution...
 best = 1;
+scores
 for i = 1:size(scores)
     if scores(i) > scores(best)
         best = i;

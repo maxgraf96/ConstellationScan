@@ -1,3 +1,3 @@
 clear all
-input = imread('Datenbank/input008.jpg');
+input = imread('Datenbank/input011.jpg');
 gui_function(input);
